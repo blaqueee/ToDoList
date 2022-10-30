@@ -4,6 +4,7 @@ import edu.personal.issuetracker.domain.Status;
 import edu.personal.issuetracker.domain.Task;
 import edu.personal.issuetracker.domain.User;
 import edu.personal.issuetracker.dto.TaskDto;
+import edu.personal.issuetracker.dto.form.TaskEditForm;
 import edu.personal.issuetracker.dto.form.TaskForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -36,5 +37,17 @@ public class TaskMapper {
                 .owner(user)
                 .status(Status.NOT_FINISHED)
                 .build();
+    }
+
+    public Task mapToTask(Task task, TaskEditForm taskEditForm, String fileName) {
+        if (taskEditForm.getTitle() != null)
+            task.setTitle(taskEditForm.getTitle());
+        if (taskEditForm.getDescription() != null)
+            task.setDescription(taskEditForm.getDescription());
+        if (taskEditForm.getStatus() != null)
+            task.setStatus(taskEditForm.getStatus());
+        if (fileName != null)
+            task.setFileName(fileName);
+        return task;
     }
 }

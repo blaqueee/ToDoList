@@ -1,5 +1,6 @@
 package edu.personal.issuetracker.controller;
 
+import edu.personal.issuetracker.dto.form.TaskEditForm;
 import edu.personal.issuetracker.dto.form.TaskForm;
 import edu.personal.issuetracker.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,12 @@ public class TaskController {
     @DeleteMapping
     public ResponseEntity<?> clearTrash(Authentication auth) {
         return taskService.clearTrash(auth);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> editTask(@ModelAttribute TaskEditForm taskEditForm, Authentication auth) {
+        if (taskEditForm.getId() == null)
+            return ResponseEntity.badRequest().body("You can't edit the task without ID!");
+        return taskService.editTask(taskEditForm, auth);
     }
 }

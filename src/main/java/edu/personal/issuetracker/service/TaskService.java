@@ -4,6 +4,7 @@ import edu.personal.issuetracker.domain.Status;
 import edu.personal.issuetracker.domain.Task;
 import edu.personal.issuetracker.domain.User;
 import edu.personal.issuetracker.dto.TaskDto;
+import edu.personal.issuetracker.dto.form.TaskEditForm;
 import edu.personal.issuetracker.dto.form.TaskForm;
 import edu.personal.issuetracker.mapper.TaskMapper;
 import edu.personal.issuetracker.repository.TaskRepository;
@@ -49,5 +50,23 @@ public class TaskService {
         var tasks = taskRepository.findAllByOwnerAndStatus(owner, Status.TRASH);
         taskRepository.deleteAll(tasks);
         return ResponseEntity.ok("Trash has been successfully cleared!");
+    }
+
+    public ResponseEntity<?> editTask(TaskEditForm taskEditForm, Authentication auth) {
+        User owner = (User) auth.getPrincipal();
+        Long taskId = taskEditForm.getId();
+        if (!taskRepository.existsById(taskId) || !taskRepository.existsByIdAndOwner(taskId, owner))
+            return ResponseEntity.badRequest().body("Task with ID " + taskId + " doesn't exists or it's not yours!");
+        return editAndSaveTask(taskEditForm, auth);
+    }
+
+    private ResponseEntity<TaskDto> editAndSaveTask(TaskEditForm taskEditForm, Authentication auth) {
+        Task task = taskRepository.findById(taskEditForm.getId()).get();
+        String fileName = null;
+        if (taskEditForm.getFile() != null)
+            fileName = FileUtil.writeFile(taskEditForm.getFile(), taskEditForm.getId(), auth.getName());
+        task = taskMapper.mapToTask(task, taskEditForm, fileName);
+        Task editedTask = taskRepository.save(task);
+        return ResponseEntity.ok(taskMapper.mapToTaskDto(editedTask));
     }
 }
