@@ -8,6 +8,7 @@ import edu.personal.issuetracker.mapper.TaskMapper;
 import edu.personal.issuetracker.repository.TaskRepository;
 import edu.personal.issuetracker.utility.FileUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,21 @@ public class TaskService {
         Task task = taskMapper.mapToTask(taskForm, user, fileName);
         Task newTask = taskRepository.save(task);
         return taskMapper.mapToTaskDto(newTask);
+    }
+
+    public ResponseEntity<?> finishTask(Long taskId, Authentication auth) {
+        User owner = (User) auth.getPrincipal();
+        if (!taskRepository.existsById(taskId) || !taskRepository.existsByIdAndOwner(taskId, owner))
+            return ResponseEntity.badRequest().body("Task with ID " + taskId + " doesn't exists or it's not yours!");
+        Task task = taskRepository.findById(taskId).get();
+        return task.getStatus().finish(task, taskRepository, taskMapper);
+    }
+
+    public ResponseEntity<?> deleteTask(Long taskId, Authentication auth) {
+        User owner = (User) auth.getPrincipal();
+        if (!taskRepository.existsById(taskId) || !taskRepository.existsByIdAndOwner(taskId, owner))
+            return ResponseEntity.badRequest().body("Task with ID " + taskId + " doesn't exists or it's not yours!");
+        Task task = taskRepository.findById(taskId).get();
+        return task.getStatus().delete(task, taskRepository, taskMapper);
     }
 }

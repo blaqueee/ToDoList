@@ -5,10 +5,7 @@ import edu.personal.issuetracker.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/task")
@@ -19,5 +16,15 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<?> createTask(@ModelAttribute TaskForm taskForm, Authentication auth) {
         return ResponseEntity.ok(taskService.createTask(taskForm, auth));
+    }
+
+    @PutMapping("/{taskId}")
+    public ResponseEntity<?> finishTask(@PathVariable Long taskId, Authentication auth) {
+        return taskService.finishTask(taskId, auth);
+    }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long taskId, Authentication auth) {
+        return taskService.deleteTask(taskId, auth);
     }
 }

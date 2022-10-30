@@ -19,13 +19,12 @@ public class Task {
     private Long id;
     private String title;
     private String description;
-
     @JsonProperty("file_name")
     private String fileName;
-
     private LocalDateTime time;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
+    @Enumerated
+    private Status status;
 }

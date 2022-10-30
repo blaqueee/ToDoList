@@ -1,6 +1,7 @@
 package edu.personal.issuetracker.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.personal.issuetracker.domain.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,5 @@ public class TaskDto {
     private String fileName;
     private LocalDateTime time;
     private UserDto owner;
+    private Status status;
 }

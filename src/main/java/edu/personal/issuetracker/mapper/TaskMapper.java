@@ -1,5 +1,6 @@
 package edu.personal.issuetracker.mapper;
 
+import edu.personal.issuetracker.domain.Status;
 import edu.personal.issuetracker.domain.Task;
 import edu.personal.issuetracker.domain.User;
 import edu.personal.issuetracker.dto.TaskDto;
@@ -22,6 +23,7 @@ public class TaskMapper {
                 .fileName(task.getFileName())
                 .time(task.getTime())
                 .owner(userMapper.mapToUserDto(task.getOwner()))
+                .status(task.getStatus())
                 .build();
     }
 
@@ -32,6 +34,7 @@ public class TaskMapper {
                 .fileName(fileName)
                 .time(LocalDateTime.now())
                 .owner(user)
+                .status(Status.NOT_FINISHED)
                 .build();
     }
 }
