@@ -1,8 +1,6 @@
 package edu.personal.issuetracker.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.lang.NonNullFields;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +18,7 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String username;

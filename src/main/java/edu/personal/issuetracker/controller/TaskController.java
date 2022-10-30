@@ -27,4 +27,9 @@ public class TaskController {
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId, Authentication auth) {
         return taskService.deleteTask(taskId, auth);
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> clearTrash(Authentication auth) {
+        return taskService.clearTrash(auth);
+    }
 }

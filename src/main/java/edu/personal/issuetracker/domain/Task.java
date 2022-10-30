@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "tasks")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
@@ -25,6 +25,6 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Status status;
 }

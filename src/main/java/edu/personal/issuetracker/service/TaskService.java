@@ -1,5 +1,6 @@
 package edu.personal.issuetracker.service;
 
+import edu.personal.issuetracker.domain.Status;
 import edu.personal.issuetracker.domain.Task;
 import edu.personal.issuetracker.domain.User;
 import edu.personal.issuetracker.dto.TaskDto;
@@ -20,7 +21,7 @@ public class TaskService {
 
     public TaskDto createTask(TaskForm taskForm, Authentication auth) {
         long count = taskRepository.count();
-        String fileName = FileUtil.writeFile(taskForm.getFile(), count + 2, auth.getName());
+        String fileName = FileUtil.writeFile(taskForm.getFile(), count + 1, auth.getName());
         User user = (User) auth.getPrincipal();
         Task task = taskMapper.mapToTask(taskForm, user, fileName);
         Task newTask = taskRepository.save(task);
@@ -41,5 +42,12 @@ public class TaskService {
             return ResponseEntity.badRequest().body("Task with ID " + taskId + " doesn't exists or it's not yours!");
         Task task = taskRepository.findById(taskId).get();
         return task.getStatus().delete(task, taskRepository, taskMapper);
+    }
+
+    public ResponseEntity<?> clearTrash(Authentication auth) {
+        User owner = (User) auth.getPrincipal();
+        var tasks = taskRepository.findAllByOwnerAndStatus(owner, Status.TRASH);
+        taskRepository.deleteAll(tasks);
+        return ResponseEntity.ok("Trash has been successfully cleared!");
     }
 }
